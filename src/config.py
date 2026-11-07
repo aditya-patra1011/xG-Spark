@@ -5,6 +5,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 DATA_DIR = PROJECT_ROOT / "data"
 RAW_DIR = DATA_DIR / "raw" / "statsbomb"
+BRONZE_DIR = DATA_DIR / "bronze"
 SILVER_DIR = DATA_DIR / "silver"
 GOLD_DIR = DATA_DIR / "gold"
 
@@ -35,4 +36,4 @@ COMPETITIONS = [
 ]
 
 DOWNLOAD_WORKERS = 16   # Files download in parallel
-DOWNLOAD_RETRIES = 3    # attempts per file before giving up    # attempts per file before giving up
+DOWNLOAD_RETRIES = 3    # attempts per file before giving up
