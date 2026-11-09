@@ -40,3 +40,11 @@ DOWNLOAD_RETRIES = 3    # attempts per file before giving up
 
 PITCH_LENGTH = 120.0
 PITCH_WIDTH = 80.0
+
+# Goal and penalty box (StatsBomb coordinates)
+GOAL_CENTER_Y = 40.0
+LEFT_POST_Y = 36.0
+RIGHT_POST_Y = 44.0
+PENALTY_BOX_X = 102.0
+PENALTY_BOX_Y_MIN = 18.0
+PENALTY_BOX_Y_MAX = 62.0
