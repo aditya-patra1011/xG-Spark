@@ -1,0 +1,13 @@
+model,params,cv_auc,selected
+lr,regParam=0.0,0.8066,True
+lr,regParam=0.001,0.8056,False
+lr,regParam=0.01,0.804,False
+lr_weighted,regParam=0.0,0.807,True
+lr_weighted,regParam=0.001,0.8065,False
+lr_weighted,regParam=0.01,0.805,False
+rf,maxDepth=6,0.7869,False
+rf,maxDepth=10,0.7972,True
+gbt,"maxDepth=3, maxIter=50",0.8018,False
+gbt,"maxDepth=3, maxIter=100",0.8045,True
+gbt,"maxDepth=5, maxIter=50",0.8014,False
+gbt,"maxDepth=5, maxIter=100",0.8003,False

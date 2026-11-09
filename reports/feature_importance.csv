@@ -1,0 +1,45 @@
+feature,importance
+angle,0.30072978711252957
+gk_distance,0.15942455437844572
+nearest_defender,0.12286674744620972
+defenders_in_cone,0.08791164330259167
+body_part_encoded_Head,0.08320647453772907
+gk_off_line,0.04798644946116383
+assist_type_encoded_Through Ball,0.03679505437477638
+distance,0.03273121157562315
+open_goal,0.021951392864102134
+technique_encoded_Normal,0.019562357543946467
+one_on_one,0.011412317403223973
+shot_type_encoded_Open Play,0.010121273976885496
+body_part_encoded_Right Foot,0.00765004990340036
+aerial_won,0.006394119411738524
+technique_encoded_Lob,0.005639829184191163
+play_pattern_encoded_From Corner,0.005495853575912137
+technique_encoded_Half Volley,0.005076762259602625
+body_part_encoded_Other,0.003809229803734234
+technique_encoded_Backheel,0.003799544607078237
+assist_type_encoded_No Assist,0.0035318851645173505
+under_pressure,0.0032655153592908988
+assist_type_encoded_Cross,0.0031278495163196522
+log_distance,0.0027212445484275844
+play_pattern_encoded_Regular Play,0.002537756763026181
+play_pattern_encoded_From Counter,0.0017798442845956197
+play_pattern_encoded_From Keeper,0.0016111539991170427
+in_box,0.001501012780894175
+redirect,0.0012432393674324759
+play_pattern_encoded_Other,0.0011669106427162081
+technique_encoded_Overhead Kick,0.0009637091033977944
+body_part_encoded_Left Foot,0.000659426255802478
+technique_encoded_Diving Header,0.000644858146300244
+play_pattern_encoded_From Goal Kick,0.0006019915200990017
+play_pattern_encoded_From Kick Off,0.0005862924644488791
+assist_type_encoded_Other Pass,0.00042829566114373056
+is_home,0.00039808191868061384
+first_time,0.0003359354395692886
+assist_type_encoded_Cutback,0.00033034434133653905
+play_pattern_encoded_From Throw In,0.0
+play_pattern_encoded_From Free Kick,0.0
+shot_type_encoded_Corner,0.0
+shot_type_encoded_Free Kick,0.0
+follows_dribble,0.0
+technique_encoded_Volley,0.0

@@ -48,3 +48,10 @@ RIGHT_POST_Y = 44.0
 PENALTY_BOX_X = 102.0
 PENALTY_BOX_Y_MIN = 18.0
 PENALTY_BOX_Y_MAX = 62.0
+
+# Machine learning
+REPORTS_DIR = PROJECT_ROOT / "reports"
+RANDOM_SEED = 42
+TEST_BUCKETS = 5        # 1 bucket in 5 is held out, so about 20% of matches
+CV_FOLDS = 3
+CV_PARALLELISM = 4      # hyperparameter settings trained at the same time
