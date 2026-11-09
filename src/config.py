@@ -37,3 +37,6 @@ COMPETITIONS = [
 
 DOWNLOAD_WORKERS = 16   # Files download in parallel
 DOWNLOAD_RETRIES = 3    # attempts per file before giving up
+
+PITCH_LENGTH = 120.0
+PITCH_WIDTH = 80.0
