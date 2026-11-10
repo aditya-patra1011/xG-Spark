@@ -10,7 +10,7 @@ MIN_TEAM_MATCHES = 3    # the open data has only 2 matches for some teams
 QUERIES = {
     # Aggregation with HAVING: who scores more than their chances suggest?
     "player_finishing": f"""
-        SELECT player_id, player_name,
+        SELECT player_id, MAX(player_name) AS player_name,
                COUNT(*) AS shots,
                SUM(is_goal) AS goals,
                ROUND(SUM(statsbomb_xg), 2) AS xg,
@@ -18,20 +18,22 @@ QUERIES = {
                ROUND(AVG(is_goal), 3) AS conversion,
                ROUND(AVG(statsbomb_xg), 3) AS xg_per_shot
         FROM shot_features
-        GROUP BY player_id, player_name
+        GROUP BY player_id
         HAVING COUNT(*) >= {MIN_PLAYER_SHOTS}
     """,
 
     # CTE + window function: rank the teams inside each competition
+    # Grouped by id because StatsBomb spells a few clubs in two ways
     "team_attack": f"""
         WITH team_totals AS (
-            SELECT competition_name, season_name, team_name,
+            SELECT competition_name, season_name, team_id,
+                   MAX(team_name) AS team_name,
                    COUNT(DISTINCT match_id) AS matches,
                    COUNT(*) AS shots,
                    SUM(is_goal) AS goals,
                    SUM(statsbomb_xg) AS xg
             FROM shot_features
-            GROUP BY competition_name, season_name, team_name
+            GROUP BY competition_name, season_name, team_id
             HAVING COUNT(DISTINCT match_id) >= {MIN_TEAM_MATCHES}
         )
         SELECT competition_name, season_name, team_name, matches, shots, goals,
