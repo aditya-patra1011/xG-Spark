@@ -212,6 +212,12 @@ def flight_path(x: float, y: float, is_header: bool, chance: float, keeper: floa
                                showlegend=False, text=["Goalkeeper"] * 2, hovertemplate="%{text}<extra></extra>",
                                line=dict(color="#0ea5e9", width=11), marker=dict(size=3, color="#0ea5e9")))
 
+    fig.add_trace(go.Scatter3d(x=[x], y=[y], z=[0.1], mode="markers", hoverinfo="skip", showlegend=False,
+                               marker=dict(size=7, color=GOLD)))
+    fig.add_trace(go.Scatter3d(x=[x, 120], y=[y, 40], z=[3.2 + start_z, GOAL_HEIGHT + 1.6], mode="text",
+                               text=["<b>SHOT</b>", "<b>GOAL</b>"], hoverinfo="skip", showlegend=False,
+                               textfont=dict(color=INK, size=13)))
+
     ball_index = len(fig.data)
     fig.add_trace(go.Scatter3d(x=[x], y=[y], z=[start_z], mode="markers", showlegend=False,
                                hovertemplate=f"xG {chance:.1%}<extra></extra>",

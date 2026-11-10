@@ -4,7 +4,7 @@ import streamlit as st
 
 import store
 import ui
-from charts import shot_dots
+from charts import shot_dots, view_3d
 
 FORM_WINDOW = 5
 
@@ -135,4 +135,6 @@ with form_column:
 with map_column:
     with ui.panel("Where they shoot from"):
         shots = store.shots()
-        ui.show(shot_dots(shots[(shots["team"] == team) & (shots["label"] == competition)], height=400))
+        three_d = view_3d("team_3d")
+        ui.show(shot_dots(shots[(shots["team"] == team) & (shots["label"] == competition)], height=430,
+                          three_d=three_d))

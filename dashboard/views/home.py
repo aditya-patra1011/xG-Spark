@@ -4,7 +4,7 @@ import streamlit as st
 
 import store
 import ui
-from charts import zone_heatmap
+from charts import view_3d, zone_heatmap
 
 shots = store.shots()
 matches = store.matches()
@@ -94,7 +94,8 @@ with ring_column:
 
 with map_column:
     with ui.panel("Where shots come from"):
-        ui.show(zone_heatmap(store.zone_table(shots), "Shots", height=300))
+        three_d = view_3d("home_3d")
+        ui.show(zone_heatmap(store.zone_table(shots), "Shots", height=372, three_d=three_d))
 
 st.write("")
 cards = st.columns(4, gap="small")

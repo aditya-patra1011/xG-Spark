@@ -2,10 +2,10 @@
 import numpy as np
 import plotly.graph_objects as go
 
-from ui import style_figure
+from ui import INK, style_figure
 
 TURF = "#0c1712"
-PITCH_LINE = "#5a7468"
+PITCH_LINE = "#b4cabe"
 
 
 def _line(x0, y0, x1, y1) -> dict:
@@ -47,7 +47,7 @@ def full_pitch(height: int = 500) -> go.Figure:
     fig.add_trace(_arc_trace(*_arc(12, 40, 10, -53, 53)))
     fig.add_trace(_arc_trace(*_arc(108, 40, 10, 127, 233)))
     fig.update_xaxes(range=[-4, 124], visible=False, constrain="domain")
-    fig.update_yaxes(range=[82, -2], visible=False, scaleanchor="x", scaleratio=1)
+    fig.update_yaxes(range=[82, -6], visible=False, scaleanchor="x", scaleratio=1)
     style_figure(fig, height, margin=dict(l=4, r=4, t=30, b=4))
     return fig
 
@@ -66,6 +66,9 @@ def half_pitch(height: int = 520) -> go.Figure:
     fig.add_trace(go.Scatter(x=[40], y=[108], mode="markers", marker=dict(size=4, color=PITCH_LINE),
                              hoverinfo="skip", showlegend=False))
     fig.update_xaxes(range=[-2, 82], visible=False, constrain="domain")
-    fig.update_yaxes(range=[58, 124], visible=False, scaleanchor="x", scaleratio=1)
+    fig.update_yaxes(range=[56, 128], visible=False, scaleanchor="x", scaleratio=1)
     style_figure(fig, height, margin=dict(l=4, r=4, t=4, b=4))
+    for text, y in [("GOAL", 123.4), ("HALFWAY LINE", 56.6)]:
+        fig.add_annotation(x=40, y=y, text=f"<b>{text}</b>", showarrow=False, yanchor="bottom",
+                           font=dict(color=INK, size=12))
     return fig

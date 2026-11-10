@@ -4,7 +4,7 @@ import streamlit as st
 
 import store
 import ui
-from charts import shot_dots
+from charts import shot_dots, view_3d
 
 ui.page_head("Player", "Scout", "Finishing profiles, built from every shot a player took in this data.")
 
@@ -103,7 +103,8 @@ map_column, table_column = st.columns([1, 1.1], gap="small")
 
 with map_column:
     with ui.panel("Shot map"):
-        ui.show(shot_dots(shots[shots["player_id"] == player_id], height=470))
+        three_d = view_3d("player_3d")
+        ui.show(shot_dots(shots[shots["player_id"] == player_id], height=470, three_d=three_d))
 
 with table_column:
     if rival is not None:

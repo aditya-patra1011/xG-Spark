@@ -4,7 +4,7 @@ import streamlit as st
 
 import store
 import ui
-from charts import shot_dots, zone_heatmap
+from charts import SHOT_LIMIT, shot_dots, view_3d, zone_heatmap
 
 ui.page_head("Shot", "Explorer", "Filter every shot in the dataset by who, how and where.")
 
@@ -58,15 +58,16 @@ with map_column:
             "View", ["Shot map", "Shots", "Conversion", "Average xG"], default="Shots",
             label_visibility="collapsed",
         ) or "Shots"
+        three_d = view_3d("explorer_3d")
         if view == "Shot map":
-            ui.show(shot_dots(data, height=590))
-            if len(data) > 2500:
-                st.html('<div class="note-text">Showing every goal and a random sample of the other shots, '
-                        "2,500 in total. Drag to rotate.</div>")
+            ui.show(shot_dots(data, height=590, three_d=three_d))
+            if len(data) > SHOT_LIMIT:
+                st.html(f'<div class="note-text">Showing a random sample of {SHOT_LIMIT:,} of these {len(data):,} shots, '
+                        "with the same share of goals. Use the filters to see every shot.</div>")
         else:
-            ui.show(zone_heatmap(store.zone_table(data), view, height=590))
+            ui.show(zone_heatmap(store.zone_table(data), view, height=590, three_d=three_d))
             if view != "Shots":
-                st.html('<div class="note-text">Only zones with at least 10 shots get a column. Drag to rotate.</div>')
+                st.html('<div class="note-text">Only zones with at least 10 shots are shown.</div>')
 
 with side_column:
     with ui.panel("How the shots ended"):

@@ -5,6 +5,7 @@ import streamlit as st
 
 import store
 import ui
+from charts import match_shot_map, view_3d
 from pitch3d import add_shot_columns, scene
 
 DEFAULT_COMPETITION = "FIFA World Cup 2022"
@@ -120,15 +121,18 @@ map_column, list_column = st.columns([1.7, 1], gap="small")
 
 with map_column:
     with ui.panel("Shot map"):
-        figure = scene(True, 470)
-        add_shot_columns(figure, home_shots, ui.GOLD, match["home_team"],
-                         miss_color="#a8860e")
-        add_shot_columns(figure, away_shots, ui.SKY, match["away_team"], x=120 - away_shots["x"],
-                         y=80 - away_shots["y"], miss_color="#0b6f9e")
-        figure.update_layout(legend=dict(y=1.0, yanchor="top", x=0))
+        three_d = view_3d("match_3d")
+        if three_d:
+            figure = scene(True, 470)
+            add_shot_columns(figure, home_shots, ui.GOLD, match["home_team"], miss_color="#a8860e")
+            add_shot_columns(figure, away_shots, ui.SKY, match["away_team"], x=120 - away_shots["x"],
+                             y=80 - away_shots["y"], miss_color="#0b6f9e")
+            figure.update_layout(legend=dict(y=1.0, yanchor="top", x=0))
+        else:
+            figure = match_shot_map(home_shots, away_shots, match["home_team"], match["away_team"], 470)
         ui.show(figure)
-        st.html('<div class="note-text">Taller columns are better chances and glowing columns are goals. Drag to rotate. '
-                "Penalties and own goals aren't shown, so the score can be higher than the shots suggest.</div>")
+        st.html('<div class="note-text">Penalties and own goals are not shown, so the score can be higher '
+                "than the shots suggest.</div>")
 
 with list_column:
     with ui.panel("Best chances"):
