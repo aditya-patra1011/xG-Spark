@@ -38,6 +38,26 @@ flowchart LR
     H --> I
 ```
 
+## Interactive dashboard
+
+A football analytics app built with Streamlit, with seven pages along the top:
+
+- **Overview:** headline numbers, biggest upsets and the least likely goals.
+- **Match Centre:** the xG race, shot map and win probability for any of the 1,781 matches.
+- **Shot Explorer:** filter every shot by competition, team, player, body part, assist and phase of play.
+- **Players:** scouting profiles, head-to-head comparisons and a leaderboard.
+- **Teams:** real league tables against expected points, plus form and shot maps.
+- **Shot Lab:** click anywhere on the pitch and get a live prediction from the trained model.
+- **Model Lab:** ROC curves, calibration and feature importance.
+
+![Dashboard overview](reports/screenshots/dashboard_overview.png)
+
+The app reads small exported files in `dashboard/datasets`, so it runs without Spark or the 5 GB dataset:
+
+```bash
+streamlit run dashboard/app.py
+```
+
 ## Data
 
 [StatsBomb Open Data](https://github.com/statsbomb/open-data), used under its open-data terms. The project uses men's football only: the 2015/16 seasons of the Premier League, La Liga, Serie A, Ligue 1 and part of the Bundesliga, plus the 2018 and 2022 World Cups and Euro 2020 and 2024.
@@ -63,6 +83,8 @@ src/
   model.py           Phase 6: MLlib pipelines and cross-validation
   evaluate.py        Phase 7: test-set metrics and calibration
   visualize.py       Phase 8: report figures
+  export_dashboard.py Phase 10: prepares the dashboard's data
+dashboard/           the Streamlit app and its exported data
 notebooks/           the whole pipeline with its outputs
 reports/             report, metrics, figures and screenshots
 scripts/             environment check
@@ -92,6 +114,7 @@ python -m src.analytics
 python -m src.model
 python -m src.evaluate
 python -m src.visualize
+python -m src.export_dashboard
 ```
 
 ## Limitations

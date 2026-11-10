@@ -55,3 +55,6 @@ RANDOM_SEED = 42
 TEST_BUCKETS = 5        # 1 bucket in 5 is held out, so about 20% of matches
 CV_FOLDS = 3
 CV_PARALLELISM = 4      # hyperparameter settings trained at the same time
+
+# Dashboard
+DASHBOARD_DATA_DIR = PROJECT_ROOT / "dashboard" / "datasets"

@@ -239,6 +239,12 @@ The angle of the goal visible to the shooter is the most important input, follow
 
 ![Shots and conversion by minute](figures/07_minute_trend.png)
 
+### 6.4 Interactive dashboard
+
+The results are also presented in a seven-page Streamlit dashboard, with top navigation for Overview, Match Centre, Shot Explorer, Players, Teams, Shot Lab and Model Lab. The Shot Lab runs the trained Logistic Regression model as plain Python. Its predictions match Spark's to within 1e-15 on all 8,807 test shots.
+
+![Dashboard overview](screenshots/dashboard_overview.png)
+
 ## 7. Output Screenshots
 
 These are the executed notebook outputs for each phase.
@@ -295,6 +301,8 @@ The trained models reach an AUC of 0.82–0.83 on unseen matches and are well ca
 | [`model.py`](../src/model.py) | Phase 6: MLlib training |
 | [`evaluate.py`](../src/evaluate.py) | Phase 7: evaluation |
 | [`visualize.py`](../src/visualize.py) | Phase 8: visualization |
+| [`export_dashboard.py`](../src/export_dashboard.py) | Phase 10: dashboard data |
+| [`dashboard/`](../dashboard/app.py) | Streamlit dashboard |
 | [`xg_pipeline.ipynb`](../notebooks/xg_pipeline.ipynb) | Full notebook with outputs |
 
 ## References
