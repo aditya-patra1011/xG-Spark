@@ -241,7 +241,7 @@ The angle of the goal visible to the shooter is the most important input, follow
 
 ### 6.4 Interactive dashboard
 
-The results are also presented in a seven-page Streamlit dashboard, with top navigation for Overview, Match Centre, Shot Explorer, Players, Teams, Shot Lab and Model Lab. The Shot Lab runs the trained Logistic Regression model as plain Python. Its predictions match Spark's to within 1e-15 on all 8,807 test shots.
+The results are also presented in a seven-page Streamlit dashboard, with top navigation for Overview, Match Centre, Shot Explorer, Players, Teams, Shot Lab and Model Lab. Pitch views are interactive 3D scenes where each zone or shot stands as a column. The Shot Lab runs the trained Logistic Regression model as plain Python. Its predictions match Spark's to within 1e-15 on all 8,807 test shots.
 
 ![Dashboard overview](screenshots/dashboard_overview.png)
 

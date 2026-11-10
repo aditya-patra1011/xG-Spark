@@ -1,12 +1,13 @@
 """The dashboard's look: colours, global styles and reusable visual components."""
 import html
-import math
-import random
 import re
 from contextlib import contextmanager
 
 import plotly.graph_objects as go
 import streamlit as st
+
+import depth
+from depth import AMBER, GOLD, GREEN, RED  # noqa: F401
 
 BG = "#07080c"
 PANEL = "#10121a"
@@ -16,13 +17,9 @@ INK = "#f4f2ea"
 INK_SECONDARY = "#b5b3a8"
 MUTED = "#8b8a82"
 
-GOLD = "#f5c518"
-AMBER = "#ff9f1c"
-RED = "#ef4444"
-GREEN = "#22c55e"
 SKY = "#0ea5e9"
 
-GOLD_SCALE = [[0, "#1c1a0e"], [0.25, "#5c4a08"], [0.55, "#a8860e"], [0.8, "#f5c518"], [1, "#fff0a8"]]
+GOLD_SCALE = [[0, "#3f3208"], [0.3, "#8f6f09"], [0.6, "#d8ab0f"], [0.85, "#f5c518"], [1, "#fff3b5"]]
 
 CSS = """
 <style>
@@ -253,6 +250,7 @@ label, [data-testid="stWidgetLabel"] p {
 
 def setup() -> None:
     st.html(CSS)
+    depth.install()
 
 
 def _graphic(markup: str) -> None:
@@ -305,162 +303,23 @@ def rows(items: list[tuple]) -> None:
     st.html(f'<div class="rows">{body}</div>')
 
 
-def _point(cx: float, cy: float, radius: float, degrees: float) -> tuple[float, float]:
-    angle = math.radians(degrees)
-    return cx + radius * math.cos(angle), cy - radius * math.sin(angle)
-
-
-def _segment_color(position: float) -> str:
-    if position < 0.25:
-        return RED
-    if position < 0.5:
-        return AMBER
-    if position < 0.75:
-        return GOLD
-    return GREEN
-
-
-def gauge_svg(fraction: float, value_text: str) -> str:
-    """A segmented semicircle running from red through yellow to green."""
-    fraction = max(0.0, min(1.0, fraction))
-    cx, cy, radius = 120, 118, 92
-    segments = 34
-    arcs = ""
-    for index in range(segments):
-        start = 180 - index * 180 / segments - 1.2
-        end = 180 - (index + 1) * 180 / segments + 1.2
-        x1, y1 = _point(cx, cy, radius, start)
-        x2, y2 = _point(cx, cy, radius, end)
-        position = (index + 0.5) / segments
-        color = _segment_color(position) if position <= fraction else "#262a35"
-        arcs += (
-            f'<path d="M{x1:.1f} {y1:.1f} A{radius} {radius} 0 0 1 {x2:.1f} {y2:.1f}" '
-            f'stroke="{color}" stroke-width="21" fill="none"/>'
-        )
-    return (
-        f'<svg viewBox="0 0 240 132" role="img" aria-label="{esc(value_text)}">'
-        f'<circle cx="{cx}" cy="{cy}" r="71" fill="#0b0c12" stroke="#2b2f3b" stroke-width="1"/>'
-        f"{arcs}"
-        f'<text x="{cx}" y="{cy - 18}" text-anchor="middle" fill="{GOLD}" font-size="39" '
-        f"font-weight=\"700\" font-family=\"'Barlow Condensed','Segoe UI',sans-serif\">{esc(value_text)}</text>"
-        f"</svg>"
-    )
-
-
 def gauge(fraction: float, value_text: str, label: str, note: str = "") -> None:
     extra = f'<div class="note">{esc(note)}</div>' if note else ""
-    _graphic(f'<div class="dial">{gauge_svg(fraction, value_text)}'
+    _graphic(f'<div class="dial">{depth.gauge_svg(fraction, value_text, esc(value_text))}'
              f'<div class="label">{esc(label)}</div>{extra}</div>')
 
 
 def ring(fraction: float, value_text: str, label: str, note: str = "") -> None:
-    """A red dial with a dark red centre."""
-    fraction = max(0.0, min(1.0, fraction))
-    radius = 66
-    circumference = 2 * math.pi * radius
-    filled = circumference * fraction
+    """A glossy red dial."""
     uid = re.sub(r"[^a-z0-9]", "", label.lower())
     extra = f'<div class="note">{esc(note)}</div>' if note else ""
-    _graphic(
-        f'<div class="dial"><svg viewBox="0 0 170 170" role="img" aria-label="{esc(value_text)}">'
-        f'<defs><radialGradient id="c{uid}"><stop offset="0" stop-color="#8f1a20"/>'
-        f'<stop offset="1" stop-color="#430a10"/></radialGradient>'
-        f'<linearGradient id="g{uid}"><stop offset="0" stop-color="{AMBER}"/>'
-        f'<stop offset="1" stop-color="{RED}"/></linearGradient></defs>'
-        f'<circle cx="85" cy="85" r="{radius}" fill="none" stroke="#3a1419" stroke-width="15"/>'
-        f'<circle cx="85" cy="85" r="{radius}" fill="none" stroke="url(#g{uid})" stroke-width="15" '
-        f'stroke-linecap="round" stroke-dasharray="{filled:.1f} {circumference:.1f}" '
-        f'transform="rotate(-90 85 85)"/>'
-        f'<circle cx="85" cy="85" r="52" fill="url(#c{uid})"/>'
-        f'<text x="85" y="97" text-anchor="middle" fill="#fff" font-size="34" font-weight="700" '
-        f"font-family=\"'Barlow Condensed','Segoe UI',sans-serif\">{esc(value_text)}</text>"
-        f'</svg><div class="label">{esc(label)}</div>{extra}</div>'
-    )
-
-
-@st.cache_data
-def _stadium_svg() -> str:
-    """A floodlit stadium, generated in code so the artwork belongs to this project."""
-    rng = random.Random(7)
-    crowd = []
-    palette = ["#6d7490", "#9aa1bb", "#c8486a", "#d9b53a", "#4a78c8", "#e6e3da", "#3f4560"]
-    for _ in range(1900):
-        angle = rng.uniform(math.pi * 1.0, math.pi * 2.0)
-        band = rng.uniform(0.0, 1.0)
-        rx = 410 + band * 290
-        ry = 150 + band * 175
-        x = 600 + rx * math.cos(angle)
-        y = 318 + ry * math.sin(angle)
-        crowd.append(
-            f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{1.1 + band * 0.9:.1f}" '
-            f'fill="{rng.choice(palette)}" opacity="{0.4 + rng.random() * 0.55:.2f}"/>'
-        )
-
-    stripes = ""
-    for index in range(10):
-        if index % 2 == 0:
-            top_left = 330 + index * 54
-            bottom_left = 130 + index * 94
-            stripes += (
-                f'<polygon points="{top_left},214 {top_left + 54},214 '
-                f'{bottom_left + 94},420 {bottom_left},420" fill="#2fa83a" opacity="0.65"/>'
-            )
-
-    lights = ""
-    for x in (150, 370, 830, 1050):
-        lights += (
-            f'<polygon points="{x - 34},30 {x + 34},30 {600 + (x - 600) * 0.45 + 170},300 '
-            f'{600 + (x - 600) * 0.45 - 170},300" fill="url(#beam)"/>'
-            f'<circle cx="{x}" cy="26" r="56" fill="url(#glow)"/>'
-            f'<rect x="{x - 31}" y="17" width="62" height="17" rx="2" fill="#fff7d8"/>'
-        )
-
-    return f"""
-<svg viewBox="0 0 1200 420" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Floodlit football stadium">
-  <defs>
-    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#04050a"/><stop offset="1" stop-color="#101735"/>
-    </linearGradient>
-    <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#1c8a2c"/><stop offset="1" stop-color="#38c648"/>
-    </linearGradient>
-    <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#fff5c4" stop-opacity="0.22"/><stop offset="1" stop-color="#fff5c4" stop-opacity="0"/>
-    </linearGradient>
-    <radialGradient id="glow">
-      <stop offset="0" stop-color="#fff4c0" stop-opacity="0.95"/><stop offset="1" stop-color="#fff4c0" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#07080c" stop-opacity="0.72"/><stop offset="0.3" stop-color="#07080c" stop-opacity="0"/>
-    </linearGradient>
-  </defs>
-  <rect width="1200" height="420" fill="url(#sky)"/>
-  <ellipse cx="600" cy="318" rx="720" ry="345" fill="#14182a"/>
-  <ellipse cx="600" cy="318" rx="560" ry="240" fill="#1b2036"/>
-  {''.join(crowd)}
-  <ellipse cx="600" cy="318" rx="392" ry="135" fill="#0c0f1c" stroke="#f5c518" stroke-width="3" stroke-dasharray="26 7"/>
-  <rect x="470" y="150" width="82" height="24" rx="2" fill="#c8202c"/>
-  <text x="511" y="167" text-anchor="middle" font-size="14" font-weight="700" fill="#fff" font-family="Segoe UI, sans-serif">xG</text>
-  <rect x="648" y="150" width="82" height="24" rx="2" fill="#1f5fd0"/>
-  <text x="689" y="167" text-anchor="middle" font-size="14" font-weight="700" fill="#fff" font-family="Segoe UI, sans-serif">SPARK</text>
-  <polygon points="330,214 870,214 1070,420 130,420" fill="url(#grass)"/>
-  {stripes}
-  <g fill="none" stroke="#eef8ee" stroke-width="2.4" opacity="0.92">
-    <polygon points="352,226 848,226 1012,404 188,404"/>
-    <line x1="600" y1="226" x2="600" y2="404"/>
-    <ellipse cx="600" cy="298" rx="82" ry="30"/>
-    <polygon points="340,256 276,256 212,322 234,404 188,404 352,226"/>
-    <polygon points="860,256 924,256 988,322 966,404 1012,404 848,226"/>
-  </g>
-  {lights}
-  <rect width="1200" height="420" fill="url(#fade)"/>
-</svg>
-"""
+    _graphic(f'<div class="dial">{depth.ring_svg(fraction, esc(value_text), uid)}'
+             f'<div class="label">{esc(label)}</div>{extra}</div>')
 
 
 def hero(title: str, highlight: str, subtitle: str) -> None:
     _graphic(
-        f'<div class="hero">{_stadium_svg()}<div class="hero-text">'
+        f'<div class="hero">{depth.stadium_svg()}<div class="hero-text">'
         f'<div class="hero-title">{esc(title)} <b>{esc(highlight)}</b></div>'
         f'<div class="hero-sub">{esc(subtitle)}</div></div></div>'
     )

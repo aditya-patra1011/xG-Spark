@@ -5,7 +5,7 @@ import streamlit as st
 
 import store
 import ui
-from pitch import full_pitch
+from pitch3d import add_shot_columns, scene
 
 DEFAULT_COMPETITION = "FIFA World Cup 2022"
 
@@ -118,32 +118,16 @@ st.write("")
 map_column, list_column = st.columns([1.7, 1], gap="small")
 
 
-def shot_map(figure: go.Figure, frame: pd.DataFrame, name: str, color: str, flip: bool) -> None:
-    x = 120 - frame["x"] if flip else frame["x"]
-    y = 80 - frame["y"] if flip else frame["y"]
-    text = [f"<b>{p}</b> {m}'<br>{o}, {b}<br>xG {v:.2f}" for p, m, o, b, v in
-            zip(frame["player"], frame["minute"], frame["outcome"], frame["body_part"], frame["statsbomb_xg"])]
-    misses = frame["is_goal"].to_numpy() == 0
-    figure.add_trace(go.Scatter(
-        x=x[misses], y=y[misses], mode="markers", name=name, text=[t for t, m in zip(text, misses) if m],
-        hovertemplate="%{text}<extra></extra>",
-        marker=dict(size=8 + frame["statsbomb_xg"][misses] * 34, color=color, opacity=0.5, line=dict(width=0)),
-    ))
-    figure.add_trace(go.Scatter(
-        x=x[~misses], y=y[~misses], mode="markers", name=f"{name} goal", showlegend=False,
-        text=[t for t, m in zip(text, misses) if not m], hovertemplate="GOAL %{text}<extra></extra>",
-        marker=dict(symbol="star", size=16 + frame["statsbomb_xg"][~misses] * 28, color=color,
-                    line=dict(width=1.4, color="#fff")),
-    ))
-
-
 with map_column:
     with ui.panel("Shot map"):
-        figure = full_pitch(452)
-        shot_map(figure, home_shots, match["home_team"], ui.GOLD, flip=False)
-        shot_map(figure, away_shots, match["away_team"], ui.SKY, flip=True)
+        figure = scene(True, 470)
+        add_shot_columns(figure, home_shots, ui.GOLD, match["home_team"],
+                         miss_color="#a8860e")
+        add_shot_columns(figure, away_shots, ui.SKY, match["away_team"], x=120 - away_shots["x"],
+                         y=80 - away_shots["y"], miss_color="#0b6f9e")
+        figure.update_layout(legend=dict(y=1.0, yanchor="top", x=0))
         ui.show(figure)
-        st.html('<div class="note-text">Bigger circles are better chances and stars are goals. '
+        st.html('<div class="note-text">Taller columns are better chances and glowing columns are goals. Drag to rotate. '
                 "Penalties and own goals aren't shown, so the score can be higher than the shots suggest.</div>")
 
 with list_column:

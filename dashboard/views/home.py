@@ -94,7 +94,7 @@ with ring_column:
 
 with map_column:
     with ui.panel("Where shots come from"):
-        ui.show(zone_heatmap(store.zone_table(shots), "Shots", height=282))
+        ui.show(zone_heatmap(store.zone_table(shots), "Shots", height=300))
 
 st.write("")
 cards = st.columns(4, gap="small")

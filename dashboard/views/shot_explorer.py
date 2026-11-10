@@ -62,11 +62,11 @@ with map_column:
             ui.show(shot_dots(data, height=590))
             if len(data) > 2500:
                 st.html('<div class="note-text">Showing every goal and a random sample of the other shots, '
-                        "2,500 in total.</div>")
+                        "2,500 in total. Drag to rotate.</div>")
         else:
             ui.show(zone_heatmap(store.zone_table(data), view, height=590))
             if view != "Shots":
-                st.html('<div class="note-text">Only zones with at least 10 shots are coloured.</div>')
+                st.html('<div class="note-text">Only zones with at least 10 shots get a column. Drag to rotate.</div>')
 
 with side_column:
     with ui.panel("How the shots ended"):

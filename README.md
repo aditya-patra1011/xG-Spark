@@ -40,14 +40,14 @@ flowchart LR
 
 ## Interactive dashboard
 
-A football analytics app built with Streamlit, with seven pages along the top:
+A 3D football analytics app built with Streamlit, with seven pages along the top. The stadium reacts to the mouse, cards tilt, pitches can be rotated, and shots stand as glowing columns.
 
 - **Overview:** headline numbers, biggest upsets and the least likely goals.
 - **Match Centre:** the xG race, shot map and win probability for any of the 1,781 matches.
 - **Shot Explorer:** filter every shot by competition, team, player, body part, assist and phase of play.
 - **Players:** scouting profiles, head-to-head comparisons and a leaderboard.
 - **Teams:** real league tables against expected points, plus form and shot maps.
-- **Shot Lab:** click anywhere on the pitch and get a live prediction from the trained model.
+- **Shot Lab:** click anywhere on the pitch, get a live prediction from the trained model, and watch the shot fly in 3D.
 - **Model Lab:** ROC curves, calibration and feature importance.
 
 ![Dashboard overview](reports/screenshots/dashboard_overview.png)

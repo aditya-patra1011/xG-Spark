@@ -7,6 +7,7 @@ import ui
 import xg_calculator as calc
 from charts import diverging_bars
 from pitch import half_pitch
+from pitch3d import flight_path
 
 SIMILAR_RADIUS = 4.0
 PRESETS = {
@@ -121,6 +122,13 @@ shot = {
 }
 chance = calc.predict(model, shot)
 details = calc.build_features(shot)
+
+with pitch_column:
+    st.write("")
+    with ui.panel("Flight path"):
+        ui.show(flight_path(state.lab_x, state.lab_y, body == "Head", chance, keeper))
+        st.html('<div class="note-text">Press Shoot to watch the ball, and drag to rotate. The route is '
+                "illustrative, because the model only uses the moment the shot is taken.</div>")
 
 with result_column:
     with ui.panel("Expected goals"):
